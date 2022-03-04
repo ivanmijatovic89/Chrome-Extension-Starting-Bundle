@@ -1,7 +1,7 @@
 {
-  "name": "plugin name",
-  "version": "0",
-  "description": "What do I do as an extension",
+  "name": "OpenSea Relist",
+  "version": "1.2",
+  "description": ":D",
   "background": {"page": "background.html"},
   "manifest_version": 2,
   "browser_action": {
@@ -9,9 +9,10 @@
     "icons": ["icon.png"],
     "default_icon": "icon.png"
   },
+  "runtime_allowed_hosts":[ "http://*.opensea.io/*", "https://*.opensea.io/*"],
   "content_scripts": [ {
     "js": [ "jquery-2.0.2.min.js", "background.js" ],
     "css": ["customStyles.css"],
-    "matches": [ "http://*/*", "https://*/*"]
+    "matches": [ "http://*.opensea.io/*", "https://*.opensea.io/*"]
   }]
 }
