@@ -1,145 +1,157 @@
-$("body").append('Test 23' );
+console.log('Loading OS Relist plugin');
 
-var wrapper = $('<div class="osh-wrapper"></div>')
+let serverTime = moment(getServerTime());
+let now = moment();
+var diff = serverTime.diff(now);
 
-// Add buttons
-$('<button class="btn-osh osh-1" type="button">+1</button>')
-    .appendTo(wrapper);
+console.log('Server Time');
+console.log(serverTime.format('YYYY-MM-DD HH:mm'));
+console.log('Local Time : ');
+console.log(now.format('YYYY-MM-DD HH:mm'));
 
-$('<button class="btn-osh osh-2" type="button">+2</button>')
-    .appendTo(wrapper);
+var wrapper = $('<div class="osh-wrapper"></div>');
 
-wrapper.insertAfter('h1')
+// Create clickable buttons
+for (let i = 1; i < 30; i++) {
+    var d = serverTime.clone().add(i, 'minutes');
+    $('<button class="btn-osh setEndDateTime" type="button" data-date="'+d.format('YYYY-MM-DD')+'" data-time="'+d.format('HH:mm')+'">' + d.format('HH:mm') + '</button>')
+        .appendTo(wrapper);
+}
 
-console.log('ucitao je ');
+wrapper.insertAfter('article');
 
-// EVENTS
+// CLOCK
+$('<div class="clock-wrapper"><div id="clock"></div></div>').insertBefore('.osh-wrapper');
+$('<div class="clock-wrapper"><div id="clock-date"></div><div id="clock-time"></div></div>').insertBefore('.osh-wrapper');
+window.setInterval(function () {
+    var serverRealTime = moment().add(diff, 'milliseconds');
+    // $('#clock').html(serverRealTime.format('YYYY-MM-DD HH:mm:ss'));
+    $('#clock-date').html(serverRealTime.format('MMMM Do YYYY'));
+    $('#clock-time').html(serverRealTime.format('HH:mm:ss'));
+}, 1000);
 
-$(document).on('click', '.osh-1', function() {
-    console.log('osh-1');
-    setEndTime();
+
+// EVENTS > Click
+$(document).on('click', '.setEndDateTime', function() {
+    console.log('Set end date to ');
+    var date = $(this).attr('data-date');
+    var time = $(this).attr('data-time');
+
+    console.log(date);
+    console.log(time);
+    
+    if(!date || !time){
+        alert('somethings wrong...');
+        return;
+    }
+    setEndTime(date, time);
 });
 
-function setEndTime(){
+// SET END TIME FUNCTION
+function setEndTime(date, time){
     
-    console.log('set end time');
+    console.log('setEndTime function');
 
     $('#duration').trigger('click');
 
     $('.tippy-content').css('background','red');
 
-    // var inputs = $(".tippy-content input");
-
-    // console.log('inputs');
-
-    // console.log(inputs);
-
-
     setTimeout(function() { 
-        // console.log('click on end date');
-        // console.log(inputs[2]);
 
-        // 48
-        // 51
-        // $(inputs[2]).trigger('click');
-
-        // Set End Date
+        // Set End DATE
         var dateInputs = document.querySelectorAll('input[type="date"]');
         var endDateInput = dateInputs[1];
         var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
             window.HTMLInputElement.prototype,
             "value"
         ).set;
-        nativeInputValueSetter.call(endDateInput, "2022-03-04");
+        nativeInputValueSetter.call(endDateInput, date);
         var inputEvent = new Event("input", { bubbles: true });
         endDateInput.dispatchEvent(inputEvent);     
 
-
-
-        // Set End Time        
+        // Set End TIME        
         var endTimeInput = document.querySelector("#end-time");
         var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
             window.HTMLInputElement.prototype,
             "value"
         ).set;
-        nativeInputValueSetter.call(endTimeInput, "16:55");
+        nativeInputValueSetter.call(endTimeInput, time);
         var inputEvent = new Event("input", { bubbles: true });
         endTimeInput.dispatchEvent(inputEvent);        
-        
-        return;
-        var endDate  = inputs[2];
-        
-        $(endDate).val('2022-03-04').trigger("input").trigger("change");
-        $('#end-time').val('16:08').trigger("input").trigger("change");
-
-        console.log('time changed');
-
-        // $(inputs[2]).val('02');
-
-        setTimeout(function() { 
-            console.log('Typing Date... 2')
-
-            $(inputs[2]).trigger ( {
-                type: 'keypress', keyCode: 50, which: 50, charCode: 50
-            } );
-
-            inputs[2].dispatchEvent(new KeyboardEvent("keydown", {
-                key: "2",
-                keyCode: 50,        // example values.
-                code: "Digit2",       // put everything you need in this object.
-                which: 50,
-                shiftKey: false,    // you don't need to include values
-                ctrlKey: false,     // if you aren't going to use them.
-                metaKey: false,      // these are here for example's sake.
-                bubbles: false,
-            }));
-            // console.log(inputs[2]);
-
-            // simulateKey(50);
-            // simulateKey(50);
-
-            document.dispatchEvent(
-                new KeyboardEvent("keyup", {
-                    key: "2",
-                    bubbles: true
-                })
-            );
-            
-            document.dispatchEvent(
-                new KeyboardEvent("keyup", {
-                    key: "2",
-                    bubbles: true
-                })
-            );
-
-        }, 1000);
 
         
-    }, 1000); // https://keycode.info/
+
+        // SET PRICE
+        setPrice(0.1);
+        
+        $('h1').trigger('click');
+
+        // SUBMIT
+        submit(diff, date, time);
+        
+    }, 1000); // https://keycode.info/   
+}
+
+function setPrice(price){
+    // SET PRICE
+    $("input[name=price]");
+    
+    var priceInputs = document.querySelector('input[name="price"]');
+    var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+        window.HTMLInputElement.prototype,
+        "value"
+        ).set;
+    nativeInputValueSetter.call(priceInputs, price);
+    var inputEvent = new Event("input", { bubbles: true });
+    priceInputs.dispatchEvent(inputEvent);     
+    
     
 }
-  
-function simulateKey (keyCode, type, modifiers) {
-	var evtName = (typeof(type) === "string") ? "key" + type : "keydown";	
-	var modifier = (typeof(modifiers) === "object") ? modifier : {};
 
-	var event = document.createEvent("HTMLEvents");
-	event.initEvent(evtName, true, false);
-	event.keyCode = keyCode;
-	
-	for (var i in modifiers) {
-		event[i] = modifiers[i];
-	}
+// SUBMIT FORM
+function submit(diff, date, time){
+    setTimeout(function() { 
+        console.log('submit form');
 
-    document.dispatchEvent(event);
+        var endDate  = moment(`${date} ${time}`)
+        console.log('submit-form-norm: ' + endDate.format('YYYY-MM-DD HH:mm:ss'));
+        console.log('submit-form-unix: ' + endDate.unix());
 
-	
+        var serverRealTime = moment().add(diff, 'milliseconds');
+        var seconds = serverRealTime.seconds();
+        var endDate  = moment(`${date} ${time}:${seconds}`)
+        console.log('submit-form-norm: ' + endDate.format('YYYY-MM-DD HH:mm:ss'));
+        console.log('submit-form-unix: ' + endDate.unix());
+        
+
+        $("button[type=submit]").trigger('click');
+    });
 }
 
-
-
-
-
-
-// end time
-// $('#end-time').val('15:55');
+// GET SERVER TIME
+function getServerTime(){
+    var xmlHttp;
+    try {
+        //FF, Opera, Safari, Chrome
+        xmlHttp = new XMLHttpRequest();
+    }
+    catch (err1) {
+        //IE
+        try {
+            xmlHttp = new ActiveXObject('Msxml2.XMLHTTP');
+        }
+        catch (err2) {
+            try {
+                xmlHttp = new ActiveXObject('Microsoft.XMLHTTP');
+            }
+            catch (eerr3) {
+                //AJAX not supported, use CPU time.
+                alert("AJAX not supported");
+            }
+        }
+    }
+    xmlHttp.open('HEAD',window.location.href.toString(),false);
+    xmlHttp.setRequestHeader("Content-Type", "text/html");
+    xmlHttp.send('');
+    return xmlHttp.getResponseHeader("Date");
+}

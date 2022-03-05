@@ -1,6 +1,23 @@
 /*  Read about this page here: https://developer.chrome.com/extensions/content_scripts.html */
 
+.osh-wrapper{
+    margin-top:15px;
+}
 .btn-osh{
     margin:5px;
     padding:5px;
+} 
+.btn-osh{
+    background: #303339;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.clock-wrapper{
+    text-align: center;
+    font-size:20px;
+    margin:30px 0 15px 0 ;
+}
+#clock-date{
+    margin-bottom:10px;
 }
